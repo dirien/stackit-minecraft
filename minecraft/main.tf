@@ -88,6 +88,10 @@ data "template_cloudinit_config" "ubuntu-config" {
       #cloud-config
       users:
         - default
+        - name: prometheus
+          shell: /bin/false
+        - name: node_exporter
+          shell: /bin/false
 
       package_update: true
 
@@ -112,7 +116,35 @@ data "template_cloudinit_config" "ubuntu-config" {
         - path: /etc/sysctl.d/enabled_ipv4_forwarding.conf
           content: |
             net.ipv4.conf.all.forwarding=1
+        - path: /tmp/prometheus.yml
+          content: |
+            global:
+              scrape_interval: 15s
 
+            scrape_configs:
+              - job_name: 'prometheus'
+                scrape_interval: 5s
+                static_configs:
+                  - targets: ['localhost:9090']
+        - path: /etc/systemd/system/prometheus.service
+          content: |
+            [Unit]
+            Description=Prometheus
+            Wants=network-online.target
+            After=network-online.target
+
+            [Service]
+            User=prometheus
+            Group=prometheus
+            Type=simple
+            ExecStart=/usr/local/bin/prometheus \
+                --config.file /etc/prometheus/prometheus.yml \
+                --storage.tsdb.path /var/lib/prometheus/ \
+                --web.console.templates=/etc/prometheus/consoles \
+                --web.console.libraries=/etc/prometheus/console_libraries
+
+            [Install]
+            WantedBy=multi-user.target
         - path: /etc/systemd/system/minecraft.service
           content: |
             [Unit]
@@ -130,6 +162,23 @@ data "template_cloudinit_config" "ubuntu-config" {
             WantedBy=multi-user.target
 
       runcmd:
+        - mkdir /etc/prometheus
+        - mkdir /var/lib/prometheus
+        - curl -sSL https://github.com/prometheus/prometheus/releases/download/v2.27.1/prometheus-2.27.1.linux-amd64.tar.gz | tar -xz
+        - cp prometheus-2.27.1.linux-amd64/prometheus /usr/local/bin/
+        - cp prometheus-2.27.1.linux-amd64/promtool /usr/local/bin/
+        - chown prometheus:prometheus /usr/local/bin/prometheus
+        - chown prometheus:prometheus /usr/local/bin/promtool
+        - cp -r prometheus-2.27.1.linux-amd64/consoles /etc/prometheus
+        - cp -r prometheus-2.27.1.linux-amd64/console_libraries /etc/prometheus
+        - chown -R prometheus:prometheus /var/lib/prometheus
+        - chown -R prometheus:prometheus /etc/prometheus/consoles
+        - chown -R prometheus:prometheus /etc/prometheus/console_libraries
+        - mv /tmp/prometheus.yml /etc/prometheus/prometheus.yml
+        - chown prometheus:prometheus /etc/prometheus/prometheus.yml
+        - systemctl daemon-reload
+        - systemctl start prometheus
+
         - ufw allow ssh
         - ufw allow 5201
         - ufw allow proto udp to 0.0.0.0/0 port 19132
