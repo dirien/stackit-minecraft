@@ -1,5 +1,10 @@
-# stackit-minecraft
+# STACKIT Minecraft
 STACKIT Bedrock Edition Minecraft Server
 
+## Add minecraft server
 
-    https://minecraft.azureedge.net/bin-linux/bedrock-server-1.16.221.01.zip
+## Add Prometheus
+
+## Add Node Exporter
+
+
