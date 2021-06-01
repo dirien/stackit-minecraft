@@ -126,6 +126,10 @@ data "template_cloudinit_config" "ubuntu-config" {
                 scrape_interval: 5s
                 static_configs:
                   - targets: ['localhost:9090']
+              - job_name: 'node_exporter'
+                scrape_interval: 5s
+                static_configs:
+                  - targets: ['localhost:9100']
         - path: /etc/systemd/system/prometheus.service
           content: |
             [Unit]
@@ -142,6 +146,21 @@ data "template_cloudinit_config" "ubuntu-config" {
                 --storage.tsdb.path /var/lib/prometheus/ \
                 --web.console.templates=/etc/prometheus/consoles \
                 --web.console.libraries=/etc/prometheus/console_libraries
+
+            [Install]
+            WantedBy=multi-user.target
+        - path: /etc/systemd/system/node_exporter.service
+          content: |
+            [Unit]
+            Description=Node Exporter
+            Wants=network-online.target
+            After=network-online.target
+
+            [Service]
+            User=node_exporter
+            Group=node_exporter
+            Type=simple
+            ExecStart=/usr/local/bin/node_exporter
 
             [Install]
             WantedBy=multi-user.target
@@ -178,6 +197,14 @@ data "template_cloudinit_config" "ubuntu-config" {
         - chown prometheus:prometheus /etc/prometheus/prometheus.yml
         - systemctl daemon-reload
         - systemctl start prometheus
+        - systemctl enable prometheus
+
+        - curl -sSL https://github.com/prometheus/node_exporter/releases/download/v1.1.2/node_exporter-1.1.2.linux-amd64.tar.gz | tar -xz
+        - cp node_exporter-1.1.2.linux-amd64/node_exporter /usr/local/bin
+        - chown node_exporter:node_exporter /usr/local/bin/node_exporter
+        - systemctl daemon-reload
+        - systemctl start node_exporter
+        - systemctl enable node_exporter
 
         - ufw allow ssh
         - ufw allow 5201
@@ -196,6 +223,7 @@ data "template_cloudinit_config" "ubuntu-config" {
         - sed -ir "s/^[#]*\s*level-name=.*/level-name=STACKIT/" /minecraft/server.properties
         - sed -ir "s/^[#]*\s*level-seed=.*/level-seed=stackitminecraftrocks/" /minecraft/server.properties
         - systemctl restart minecraft.service
+        - systemctl enable minecraft.service
       EOF
   }
 }
