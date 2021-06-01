@@ -6,3 +6,4 @@
 **/.terraform
 **/letsencrypt
 **/ssh
+**/password

@@ -7,4 +7,12 @@ STACKIT Bedrock Edition Minecraft Server
 
 ## Add Node Exporter
 
+## Add Ansible for Grafana Cloud remote_write
+
+```bash
+cd ansible
+ansible-playbook --ask-vault-pass --private-key ../minecraft/ssh/minecraft -i hosts.yaml playbook.yaml
+```
+
+
 

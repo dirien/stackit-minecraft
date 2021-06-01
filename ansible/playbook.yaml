@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: include vars.yaml
+    include_vars: vars.yaml
+  - name: copy prometheus.yml
+    ansible.builtin.template:
+      src: prometheus.yml.j2
+      dest: /etc/prometheus/prometheus.yml
+      owner: prometheus
+      group: prometheus
+  - name: Start service prometheus, if not started
+    ansible.builtin.service:
+      name: prometheus
+      state: restarted
