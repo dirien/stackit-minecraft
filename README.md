@@ -1,7 +1,9 @@
 # STACKIT Minecraft
-STACKIT Bedrock Edition Minecraft Server
+STACKIT Bedrock and Java Edition Minecraft Server
 
-## Add minecraft server
+Everything done via IaC with Openstack and Terrafrom on STACKIT
+
+## Add Minecraft server
 
 ## Add Prometheus
 

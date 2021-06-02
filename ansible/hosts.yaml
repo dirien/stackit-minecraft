@@ -3,6 +3,7 @@ all:
     faasd:
       hosts:
         minecraft-be.ediri.online:
+        minecraft-java.ediri.online:
   vars:
     update_packages: false
     ansible_connection: ssh

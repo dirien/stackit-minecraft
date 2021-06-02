@@ -29,7 +29,7 @@ resource "openstack_networking_subnet_v2" "minecraft-snet" {
   ip_version = 4
   dns_nameservers = [
     "8.8.8.8",
-    "8.8.4.4"]
+  "8.8.4.4"]
 }
 
 resource "openstack_networking_router_v2" "minecraft-router" {
@@ -61,9 +61,9 @@ resource "openstack_networking_secgroup_rule_v2" "minecraft-22-sgr" {
 resource "openstack_networking_secgroup_rule_v2" "minecraft-19132-sgr" {
   direction         = "ingress"
   ethertype         = "IPv4"
-  protocol          = "udp"
-  port_range_min    = 19132
-  port_range_max    = 19132
+  protocol          = var.protocol
+  port_range_min    = var.port
+  port_range_max    = var.port
   remote_ip_prefix  = "0.0.0.0/0"
   security_group_id = openstack_networking_secgroup_v2.minecraft-sg.id
 }
