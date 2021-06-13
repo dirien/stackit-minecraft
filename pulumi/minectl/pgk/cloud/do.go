@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
+	"github.com/minectl/pgk/automation"
 	"github.com/pulumi/pulumi-cloudinit/sdk/go/cloudinit"
 	do "github.com/pulumi/pulumi-digitalocean/sdk/v4/go/digitalocean"
 	"github.com/pulumi/pulumi/sdk/v3/go/auto"
@@ -12,7 +13,6 @@ import (
 	"github.com/pulumi/pulumi/sdk/v3/go/pulumi"
 	"io/ioutil"
 	"log"
-	"minectl/pgk/automation"
 	"os"
 	"strings"
 )
