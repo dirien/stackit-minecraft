@@ -1,9 +1,9 @@
 package provisioner
 
 import (
-	"minectl/pgk/automation"
-	"minectl/pgk/cloud"
-	"minectl/pgk/manifest"
+	"github.com/minectl/pgk/automation"
+	"github.com/minectl/pgk/cloud"
+	"github.com/minectl/pgk/manifest"
 )
 
 type Provisioner interface {
@@ -28,7 +28,7 @@ func (p PulumiProvisioner) CreateServer() (*automation.RessourceResults, error) 
 }
 
 func (p PulumiProvisioner) DeleteServer(id string) error {
-	return p.auto.DeleteServer(id)
+	return p.auto.DeleteServer(p.args.StackName)
 }
 
 func NewProvisioner(manifestPath string) *PulumiProvisioner {
