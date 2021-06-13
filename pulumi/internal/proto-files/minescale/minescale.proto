@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option go_package = "internal/grpc/minescale/minescale";
+
+import "google/protobuf/empty.proto";
+
+package minescale;
+
+service MinescaleServer {
+  rpc CreateMinescaleServer(MinescaleRequest) returns (MinescaleReply) {}
+  rpc ListMinescaleServer(google.protobuf.Empty) returns (stream MinescaleReply) {}
+}
+
+message MinescaleRequest {
+  string name = 1;
+  string flavor = 2;
+  string cidr = 3;
+  string pubkey = 4;
+}
+
+message MinescaleReply {
+  string ip = 1;
+  bool status = 2;
+  string name = 3;
+}
