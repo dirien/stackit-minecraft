@@ -3,12 +3,13 @@ package provisioner
 import (
 	"github.com/minectl/pgk/automation"
 	"github.com/minectl/pgk/cloud"
+	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/manifest"
 )
 
 type Provisioner interface {
 	CreateServer() (*automation.RessourceResults, error)
-	DeleteServer(id string) error
+	DeleteServer() error
 	UpdateServer() (*automation.RessourceResults, error)
 }
 
@@ -19,7 +20,6 @@ type PulumiProvisioner struct {
 }
 
 func (p PulumiProvisioner) UpdateServer() (*automation.RessourceResults, error) {
-
 	return p.auto.UpdateServer(p.args)
 }
 
@@ -27,7 +27,7 @@ func (p PulumiProvisioner) CreateServer() (*automation.RessourceResults, error) 
 	return p.auto.CreateServer(p.args)
 }
 
-func (p PulumiProvisioner) DeleteServer(id string) error {
+func (p PulumiProvisioner) DeleteServer() error {
 	return p.auto.DeleteServer(p.args.StackName)
 }
 
@@ -40,9 +40,17 @@ func NewProvisioner(manifestPath string) *PulumiProvisioner {
 		Region:     manifest.Spec.Region,
 		Size:       manifest.Spec.Size,
 	}
-	cloud := cloud.NewDigitalOcean()
+	var cloudProvider automation.Automation
+	if manifest.Spec.Cloud == "do" {
+		common.PrintMixedGreen("Using cloud provider %s\n", "DigitalOcean")
+		cloudProvider = cloud.NewDigitalOcean()
+	} else if manifest.Spec.Cloud == "civo" {
+		common.PrintMixedGreen("Using cloud provider %s\n", "Civo")
+		cloudProvider = cloud.NewCivo()
+	}
+
 	p := &PulumiProvisioner{
-		auto:     cloud,
+		auto:     cloudProvider,
 		manifest: manifest,
 		args:     args,
 	}

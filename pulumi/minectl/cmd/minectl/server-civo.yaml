@@ -3,8 +3,8 @@ kind: MinecraftServer
 metadata:
   name: minecraft-server
 spec:
-  cloud: "do"
-  region: "fra1"
-  size: "s-4vcpu-8gb"
-  volumeSize: 100
+  cloud: civo
+  region: LON1
+  size:  g3.large
+  volumeSize: 5
   ssh: "/Users/dirien/Tools/repos/stackit-minecraft/minecraft/ssh/minecraft.pub"
