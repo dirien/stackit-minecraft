@@ -1,6 +1,7 @@
 package minectl
 
 import (
+	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/provisioner"
 	"log"
 
@@ -22,7 +23,7 @@ var createCmd = &cobra.Command{
 	Long: `Create an an Minecraft Server
 	`,
 	Example: `  mincetl create  \
-    --filename server.yaml`,
+    --filename server-do.yaml`,
 	RunE:          runCreate,
 	SilenceUsage:  true,
 	SilenceErrors: true,
@@ -39,6 +40,6 @@ func runCreate(cmd *cobra.Command, _ []string) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(res.PublicIP)
+	common.PrintMixedGreen("Minecraft Server IP: %s\n", res.PublicIP)
 	return err
 }

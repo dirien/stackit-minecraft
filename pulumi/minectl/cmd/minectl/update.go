@@ -1,6 +1,7 @@
 package minectl
 
 import (
+	"github.com/minectl/pgk/common"
 	"github.com/minectl/pgk/provisioner"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -20,7 +21,7 @@ var updateCmd = &cobra.Command{
 	Long: `Update an an Minecraft Server
 	`,
 	Example: `  mincetl update  \
-    --filename server.yaml`,
+    --filename server-do.yaml`,
 	RunE:          runUpdate,
 	SilenceUsage:  true,
 	SilenceErrors: true,
@@ -33,6 +34,7 @@ func runUpdate(cmd *cobra.Command, _ []string) error {
 		return errors.Wrap(err, "failed to get 'filename' value.")
 	}
 	do := provisioner.NewProvisioner(filename)
-	_, err = do.UpdateServer()
+	res, err := do.UpdateServer()
+	common.PrintMixedGreen("Minecraft Server IP: %s\n", res.PublicIP)
 	return err
 }

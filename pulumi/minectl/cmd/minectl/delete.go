@@ -20,7 +20,7 @@ var deleteCmd = &cobra.Command{
 	Long: `Delete an an Minecraft Server
 	`,
 	Example: `  mincetl delete  \
-    --filename server.yaml`,
+    --filename server-do.yaml`,
 	RunE:          runDelete,
 	SilenceUsage:  true,
 	SilenceErrors: true,
@@ -33,6 +33,6 @@ func runDelete(cmd *cobra.Command, _ []string) error {
 		return errors.Wrap(err, "failed to get 'filename' value.")
 	}
 	do := provisioner.NewProvisioner(filename)
-	_, err = do.UpdateServer()
+	err = do.DeleteServer()
 	return err
 }

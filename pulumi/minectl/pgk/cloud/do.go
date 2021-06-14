@@ -17,9 +17,6 @@ import (
 	"strings"
 )
 
-//go:embed cloud-config.yaml
-var cloudConfig string
-
 type DigitalOcean struct {
 }
 
@@ -46,15 +43,15 @@ func (d *DigitalOcean) InstallPlugin() error {
 
 func (d *DigitalOcean) UpdateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	log.Print("UpdateServer")
-	return executePulumiProgram(args, d, true)
+	return executeDOPulumiProgram(args, d, true)
 }
 
 func (d *DigitalOcean) CreateServer(args automation.ServerArgs) (*automation.RessourceResults, error) {
 	log.Print("CreateServer")
-	return executePulumiProgram(args, d, false)
+	return executeDOPulumiProgram(args, d, false)
 }
 
-func executePulumiProgram(args automation.ServerArgs, d *DigitalOcean, update bool) (*automation.RessourceResults, error) {
+func executeDOPulumiProgram(args automation.ServerArgs, d *DigitalOcean, update bool) (*automation.RessourceResults, error) {
 	ctx := context.Background()
 	program := d.Bootstrap(args)
 	var s auto.Stack
