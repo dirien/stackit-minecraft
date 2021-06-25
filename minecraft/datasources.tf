@@ -135,7 +135,7 @@ data "template_cloudinit_config" "bedrock-config" {
         - echo [sshd] | sudo tee -a /etc/fail2ban/jail.local
         - echo enabled = true | sudo tee -a /etc/fail2ban/jail.local
         - sudo systemctl restart fail2ban
-        - curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.16.221.01.zip > /tmp/bedrock-server.zip
+        - curl -sLSf https://minecraft.azureedge.net/bin-linux/bedrock-server-1.17.2.01.zip > /tmp/bedrock-server.zip
         - unzip -o /tmp/bedrock-server.zip -d /minecraft
         - chmod +x /minecraft/bedrock_server
         - sed -ir "s/^[#]*\s*max-players=.*/max-players=100/" /minecraft/server.properties
